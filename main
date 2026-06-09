@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meine App</title>
+    <title>Notiz App</title>
 
     <style>
         body {
@@ -28,26 +28,39 @@
             cursor: pointer;
         }
 
+        ul {
+            padding: 0;
+        }
+
         li {
             background: white;
-            margin: 8px 0;
-            padding: 10px;
-            border-radius: 5px;
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 8px;
             list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .delete {
-            float: right;
             background: red;
             color: white;
             border: none;
-            border-radius: 3px;
+            border-radius: 5px;
+            padding: 6px 10px;
+        }
+
+        small {
+            color: #666;
+            font-size: 12px;
         }
     </style>
 </head>
+
 <body>
 
-    <h1>Meine Notiz-App</h1>
+    <h1>📝 Meine Notiz App</h1>
 
     <input id="noteInput" placeholder="Neue Notiz eingeben">
     <button onclick="addNote()">Hinzufügen</button>
@@ -61,6 +74,10 @@
             localStorage.setItem("notes", JSON.stringify(notes));
         }
 
+        function getDate() {
+            return new Date().toLocaleString("de-DE");
+        }
+
         function renderNotes() {
             const list = document.getElementById("notes");
             list.innerHTML = "";
@@ -69,10 +86,11 @@
                 const li = document.createElement("li");
 
                 li.innerHTML = `
-                    ${note}
-                    <button class="delete" onclick="deleteNote(${index})">
-                        X
-                    </button>
+                    <div>
+                        <div><strong>${note.text}</strong></div>
+                        <small>📅 ${note.date}</small>
+                    </div>
+                    <button class="delete" onclick="deleteNote(${index})">X</button>
                 `;
 
                 list.appendChild(li);
@@ -84,7 +102,11 @@
 
             if (input.value.trim() === "") return;
 
-            notes.push(input.value);
+            notes.push({
+                text: input.value,
+                date: getDate()
+            });
+
             input.value = "";
 
             saveNotes();
