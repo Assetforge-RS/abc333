@@ -1,126 +1,249 @@
+Ja — hier ist der komplette Code mit Stylefaktor statt Steiffaktor und zusätzlichen Kriterien:
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notiz App</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 20px;
-            background: #f4f4f4;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        input {
-            width: 75%;
-            padding: 10px;
-        }
-
-        button {
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        ul {
-            padding: 0;
-        }
-
-        li {
-            background: white;
-            margin: 10px 0;
-            padding: 12px;
-            border-radius: 8px;
-            list-style: none;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .delete {
-            background: red;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 6px 10px;
-        }
-
-        small {
-            color: #666;
-            font-size: 12px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto-Finder</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f2f2f7;
+  color: #1c1c1e;
+}
+h1 { font-size: 28px; margin-bottom: 4px; }
+.subtitle { color: #666; margin-bottom: 16px; }
+.card {
+  background: white;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+label {
+  font-size: 18px;
+  font-weight: 700;
+}
+.value {
+  float: right;
+  color: #007aff;
+}
+input[type="range"] {
+  width: 100%;
+  margin: 16px 0;
+  accent-color: #007aff;
+}
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.checkbox-grid label {
+  background: #f2f2f7;
+  border-radius: 14px;
+  padding: 12px;
+  font-size: 16px;
+}
+input[type="checkbox"] {
+  transform: scale(1.25);
+  margin-right: 8px;
+}
+.result {
+  background: #111;
+  color: white;
+  border-radius: 22px;
+  padding: 22px;
+  margin-top: 16px;
+}
+.result h2 {
+  font-size: 30px;
+  margin: 0 0 8px;
+}
+.toplist {
+  margin-top: 14px;
+  line-height: 1.6;
+  font-size: 15px;
+}
+button {
+  width: 100%;
+  min-height: 50px;
+  border: none;
+  border-radius: 14px;
+  font-size: 17px;
+  font-weight: 700;
+  background: #007aff;
+  color: white;
+  margin-top: 10px;
+}
+</style>
 </head>
-
 <body>
-
-    <h1>📝 Meine Notiz App</h1>
-
-    <input id="noteInput" placeholder="Neue Notiz eingeben">
-    <button onclick="addNote()">Hinzufügen</button>
-
-    <ul id="notes"></ul>
-
-    <script>
-        let notes = JSON.parse(localStorage.getItem("notes")) || [];
-
-        function saveNotes() {
-            localStorage.setItem("notes", JSON.stringify(notes));
-        }
-
-        function getDate() {
-            return new Date().toLocaleString("de-DE");
-        }
-
-        function renderNotes() {
-            const list = document.getElementById("notes");
-            list.innerHTML = "";
-
-            notes.forEach((note, index) => {
-                const li = document.createElement("li");
-
-                li.innerHTML = `
-                    <div>
-                        <div><strong>${note.text}</strong></div>
-                        <small>📅 ${note.date}</small>
-                    </div>
-                    <button class="delete" onclick="deleteNote(${index})">X</button>
-                `;
-
-                list.appendChild(li);
-            });
-        }
-
-        function addNote() {
-            const input = document.getElementById("noteInput");
-
-            if (input.value.trim() === "") return;
-
-            notes.push({
-                text: input.value,
-                date: getDate()
-            });
-
-            input.value = "";
-
-            saveNotes();
-            renderNotes();
-        }
-
-        function deleteNote(index) {
-            notes.splice(index, 1);
-            saveNotes();
-            renderNotes();
-        }
-
-        renderNotes();
-    </script>
-
+<h1>🏎️ Auto-Finder</h1>
+<div class="subtitle">Finde das Auto, das wirklich zu dir passt</div>
+<div class="card">
+  <label>Marken auswählen</label>
+  <div class="checkbox-grid">
+    <label><input type="checkbox" value="BMW" checked onchange="berechnen()">BMW</label>
+    <label><input type="checkbox" value="Mercedes" checked onchange="berechnen()">Mercedes</label>
+    <label><input type="checkbox" value="VW" checked onchange="berechnen()">VW</label>
+    <label><input type="checkbox" value="Porsche" checked onchange="berechnen()">Porsche</label>
+    <label><input type="checkbox" value="Audi" checked onchange="berechnen()">Audi</label>
+    <label><input type="checkbox" value="Ferrari" checked onchange="berechnen()">Ferrari</label>
+    <label><input type="checkbox" value="Lamborghini" checked onchange="berechnen()">Lamborghini</label>
+    <label><input type="checkbox" value="Bugatti" checked onchange="berechnen()">Bugatti</label>
+    <label><input type="checkbox" value="Rolls-Royce" checked onchange="berechnen()">Rolls-Royce</label>
+    <label><input type="checkbox" value="Sonstige" checked onchange="berechnen()">Sonstige</label>
+  </div>
+</div>
+<div class="card"><label>💰 Budget <span class="value" id="vBudget">5</span></label><input type="range" id="budget" min="1" max="10" value="5" oninput="berechnen()"></div>
+<div class="card"><label>🐎 PS <span class="value" id="vPs">5</span></label><input type="range" id="ps" min="1" max="10" value="5" oninput="berechnen()"></div>
+<div class="card"><label>🏁 Sportlichkeit <span class="value" id="vSport">5</span></label><input type="range" id="sport" min="1" max="10" value="5" oninput="berechnen()"></div>
+<div class="card"><label>✨ Stylefaktor <span class="value" id="vStyle">5</span></label><input type="range" id="style" min="1" max="10" value="5" oninput="berechnen()"></div>
+<div class="card"><label>😎 Prollfaktor <span class="value" id="vProll">5</span></label><input type="range" id="proll" min="1" max="10" value="5" oninput="berechnen()"></div>
+<div class="card"><label>🏆 Kultfaktor <span class="value" id="vKult">5</span></label><input type="range" id="kult" min="1" max="10" value="5" oninput="berechnen()"></div>
+<div class="card"><label>🔧 Schrauberfaktor <span class="value" id="vSchrauber">5</span></label><input type="range" id="schrauber" min="1" max="10" value="5" oninput="berechnen()"></div>
+<div class="card"><label>👨‍👩‍👦 Familientauglichkeit <span class="value" id="vFamilie">5</span></label><input type="range" id="familie" min="1" max="10" value="5" oninput="berechnen()"></div>
+<div id="ergebnis"></div>
+<button onclick="zufall()">🎲 Überrasch mich</button>
+<script>
+const autos = [
+["BMW M3 E36","BMW","1992–1999","35.000–80.000 €",5,5,8,8,5,9,7,4],
+["BMW 325i E36 Coupé","BMW","1991–1999","12.000–30.000 €",3,4,6,7,4,7,8,5],
+["BMW M3 E46","BMW","2000–2006","35.000–90.000 €",5,6,9,9,6,9,7,4],
+["BMW M5 E39","BMW","1998–2003","35.000–80.000 €",5,7,7,8,5,9,6,8],
+["BMW Z3 Coupé","BMW","1998–2002","25.000–60.000 €",4,5,7,10,5,10,7,3],
+["BMW M2 Competition","BMW","2018–2021","45.000–70.000 €",6,7,9,8,6,6,4,5],
+["BMW 850 CSi","BMW","1992–1996","90.000–180.000 €",8,7,7,10,6,10,8,4],
+["Mercedes 190E Evo II","Mercedes","1990","250.000–400.000 €",9,5,9,10,7,10,8,4],
+["Mercedes C63 AMG W204","Mercedes","2008–2015","35.000–70.000 €",5,8,8,7,8,8,5,6],
+["Mercedes SL R129","Mercedes","1989–2001","20.000–80.000 €",5,5,5,8,5,8,6,4],
+["Mercedes SLS AMG","Mercedes","2010–2014","220.000–350.000 €",9,9,9,10,8,9,4,3],
+["Mercedes G63 AMG","Mercedes","2012–heute","80.000–250.000 €",9,9,4,8,10,7,3,7],
+["VW Golf 2 GTI 16V","VW","1990–1992","15.000–35.000 €",3,3,6,7,3,9,8,7],
+["VW Golf 4 R32","VW","2002–2004","25.000–55.000 €",4,5,7,7,5,8,6,7],
+["VW Golf 7 R","VW","2013–2020","25.000–45.000 €",4,6,7,5,5,4,3,8],
+["Audi TT 1.8T Coupé","Audi","1998–2006","8.000–25.000 €",2,4,5,10,4,8,7,4],
+["Audi RS4 B5","Audi","1999–2001","45.000–90.000 €",6,7,8,8,5,9,6,8],
+["Audi R8 V10","Audi","2009–heute","80.000–180.000 €",8,9,9,9,8,8,4,3],
+["Audi Quattro 20V","Audi","1990–1991","80.000–160.000 €",8,5,8,10,5,10,8,4],
+["Porsche 911 Carrera 993","Porsche","1993–1998","80.000–160.000 €",8,6,8,10,5,10,6,4],
+["Porsche 911 GT3 RS","Porsche","2003–heute","180.000–350.000 €",10,9,10,10,7,10,5,2],
+["Porsche Cayman GT4","Porsche","2015–heute","80.000–130.000 €",8,8,10,9,5,8,4,3],
+["Porsche 944 Turbo","Porsche","1990–1991","30.000–70.000 €",5,5,7,8,4,8,7,4],
+["Porsche Boxster 986 S","Porsche","1999–2004","15.000–30.000 €",3,5,7,7,4,6,6,3],
+["Ferrari F355","Ferrari","1994–1999","120.000–220.000 €",8,7,9,10,9,10,7,2],
+["Ferrari 458 Italia","Ferrari","2009–2015","180.000–280.000 €",9,9,10,9,9,9,4,2],
+["Ferrari F40","Ferrari","1987–1992","2.000.000+ €",10,10,10,10,10,10,9,1],
+["Lamborghini Gallardo","Lamborghini","2003–2013","90.000–160.000 €",8,9,9,9,10,8,5,2],
+["Lamborghini Huracán","Lamborghini","2014–heute","180.000–300.000 €",10,10,10,9,10,8,3,2],
+["Lamborghini Diablo","Lamborghini","1990–2001","300.000–600.000 €",10,10,9,10,10,10,8,1],
+["Bugatti Veyron","Bugatti","2005–2015","1.500.000+ €",10,10,9,10,10,10,2,1],
+["Rolls-Royce Phantom","Rolls-Royce","2003–heute","120.000–500.000 €",10,8,2,10,9,8,2,8],
+["Rolls-Royce Wraith","Rolls-Royce","2013–2023","160.000–300.000 €",10,8,5,10,9,8,2,5],
+["Lancia Delta Integrale Evo","Sonstige","1991–1994","70.000–150.000 €",7,5,9,10,5,10,9,4],
+["Lotus Elise S1","Sonstige","1996–2001","35.000–70.000 €",5,3,10,10,3,10,8,1],
+["Nissan Skyline GT-R R34","Sonstige","1999–2002","120.000–250.000 €",9,7,9,10,8,10,8,4],
+["Toyota Supra MK4 Turbo","Sonstige","1993–2002","80.000–180.000 €",8,7,8,9,8,10,8,4],
+["Honda NSX","Sonstige","1990–2005","90.000–180.000 €",8,6,9,10,5,10,6,3],
+["Mazda RX-7 FD","Sonstige","1992–2002","40.000–90.000 €",6,5,9,10,6,10,9,3]
+].map(a => ({
+  name: a[0],
+  marke: a[1],
+  baujahr: a[2],
+  preis: a[3],
+  budget: a[4],
+  ps: a[5],
+  sport: a[6],
+  style: a[7],
+  proll: a[8],
+  kult: a[9],
+  schrauber: a[10],
+  familie: a[11]
+}));
+function gewaehlteMarken() {
+  return Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+}
+function berechnen() {
+  const wunsch = {
+    budget: Number(document.getElementById("budget").value),
+    ps: Number(document.getElementById("ps").value),
+    sport: Number(document.getElementById("sport").value),
+    style: Number(document.getElementById("style").value),
+    proll: Number(document.getElementById("proll").value),
+    kult: Number(document.getElementById("kult").value),
+    schrauber: Number(document.getElementById("schrauber").value),
+    familie: Number(document.getElementById("familie").value)
+  };
+  document.getElementById("vBudget").innerText = wunsch.budget;
+  document.getElementById("vPs").innerText = wunsch.ps;
+  document.getElementById("vSport").innerText = wunsch.sport;
+  document.getElementById("vStyle").innerText = wunsch.style;
+  document.getElementById("vProll").innerText = wunsch.proll;
+  document.getElementById("vKult").innerText = wunsch.kult;
+  document.getElementById("vSchrauber").innerText = wunsch.schrauber;
+  document.getElementById("vFamilie").innerText = wunsch.familie;
+  const marken = gewaehlteMarken();
+  if (marken.length === 0) {
+    document.getElementById("ergebnis").innerHTML = `
+      <div class="result">
+        <h2>Keine Marke gewählt</h2>
+        Bitte mindestens eine Marke auswählen.
+      </div>`;
+    return;
+  }
+  const gefiltert = autos.filter(auto => marken.includes(auto.marke));
+  const bewertet = gefiltert.map(auto => {
+    const abweichung =
+      Math.abs(wunsch.budget - auto.budget) +
+      Math.abs(wunsch.ps - auto.ps) +
+      Math.abs(wunsch.sport - auto.sport) +
+      Math.abs(wunsch.style - auto.style) +
+      Math.abs(wunsch.proll - auto.proll) +
+      Math.abs(wunsch.kult - auto.kult) +
+      Math.abs(wunsch.schrauber - auto.schrauber) +
+      Math.abs(wunsch.familie - auto.familie);
+    const score = Math.max(0, 100 - abweichung * 2.5);
+    return { ...auto, score: Math.round(score) };
+  });
+  bewertet.sort((a, b) => b.score - a.score);
+  const bestes = bewertet[0];
+  const top10 = bewertet.slice(0, 10);
+  let topliste = "";
+  top10.forEach((auto, i) => {
+    topliste += `${i + 1}. ${auto.name} – ${auto.score}%<br>`;
+  });
+  document.getElementById("ergebnis").innerHTML = `
+    <div class="result">
+      <div>Bestes Auto für dich:</div>
+      <h2>${bestes.name}</h2>
+      <div><strong>Marke:</strong> ${bestes.marke}</div>
+      <div><strong>Baujahr:</strong> ${bestes.baujahr}</div>
+      <div><strong>Preis:</strong> ${bestes.preis}</div>
+      <br>
+      <div><strong>Passgenauigkeit:</strong> ${bestes.score}%</div>
+      <br>
+      <div>
+        Budget ${bestes.budget}/10 · PS ${bestes.ps}/10 · Sport ${bestes.sport}/10 · Style ${bestes.style}/10<br>
+        Proll ${bestes.proll}/10 · Kult ${bestes.kult}/10 · Schrauber ${bestes.schrauber}/10 · Familie ${bestes.familie}/10
+      </div>
+      <div class="toplist">
+        <strong>Top 10 Alternativen:</strong><br>
+        ${topliste}
+      </div>
+    </div>
+  `;
+}
+function zufall() {
+  ["budget","ps","sport","style","proll","kult","schrauber","familie"].forEach(id => {
+    document.getElementById(id).value = Math.floor(Math.random() * 10) + 1;
+  });
+  berechnen();
+}
+berechnen();
+</script>
 </body>
 </html>
