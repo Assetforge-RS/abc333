@@ -1,55 +1,126 @@
-<script>
-    let notes = JSON.parse(localStorage.getItem("notes")) || [];
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notiz App</title>
 
-    function saveNotes() {
-        localStorage.setItem("notes", JSON.stringify(notes));
-    }
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f4f4f4;
+        }
 
-    function getDate() {
-        const d = new Date();
-        return d.toLocaleString("de-DE");
-    }
+        h1 {
+            text-align: center;
+        }
 
-    function renderNotes() {
-        const list = document.getElementById("notes");
-        list.innerHTML = "";
+        input {
+            width: 75%;
+            padding: 10px;
+        }
 
-        notes.forEach((note, index) => {
-            const li = document.createElement("li");
+        button {
+            padding: 10px;
+            cursor: pointer;
+        }
 
-            li.innerHTML = `
-                <div>
-                    <strong>${note.text}</strong><br>
-                    <small>📅 ${note.date}</small>
-                </div>
-                <button class="delete" onclick="deleteNote(${index})">X</button>
-            `;
+        ul {
+            padding: 0;
+        }
 
-            list.appendChild(li);
-        });
-    }
+        li {
+            background: white;
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 8px;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    function addNote() {
-        const input = document.getElementById("noteInput");
+        .delete {
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 6px 10px;
+        }
 
-        if (input.value.trim() === "") return;
+        small {
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
 
-        notes.push({
-            text: input.value,
-            date: getDate()
-        });
+<body>
 
-        input.value = "";
+    <h1>📝 Meine Notiz App</h1>
 
-        saveNotes();
+    <input id="noteInput" placeholder="Neue Notiz eingeben">
+    <button onclick="addNote()">Hinzufügen</button>
+
+    <ul id="notes"></ul>
+
+    <script>
+        let notes = JSON.parse(localStorage.getItem("notes")) || [];
+
+        function saveNotes() {
+            localStorage.setItem("notes", JSON.stringify(notes));
+        }
+
+        function getDate() {
+            return new Date().toLocaleString("de-DE");
+        }
+
+        function renderNotes() {
+            const list = document.getElementById("notes");
+            list.innerHTML = "";
+
+            notes.forEach((note, index) => {
+                const li = document.createElement("li");
+
+                li.innerHTML = `
+                    <div>
+                        <div><strong>${note.text}</strong></div>
+                        <small>📅 ${note.date}</small>
+                    </div>
+                    <button class="delete" onclick="deleteNote(${index})">X</button>
+                `;
+
+                list.appendChild(li);
+            });
+        }
+
+        function addNote() {
+            const input = document.getElementById("noteInput");
+
+            if (input.value.trim() === "") return;
+
+            notes.push({
+                text: input.value,
+                date: getDate()
+            });
+
+            input.value = "";
+
+            saveNotes();
+            renderNotes();
+        }
+
+        function deleteNote(index) {
+            notes.splice(index, 1);
+            saveNotes();
+            renderNotes();
+        }
+
         renderNotes();
-    }
+    </script>
 
-    function deleteNote(index) {
-        notes.splice(index, 1);
-        saveNotes();
-        renderNotes();
-    }
-
-    renderNotes();
-</script>
+</body>
+</html>
